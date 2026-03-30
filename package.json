@@ -51,5 +51,8 @@
   "directories": {
     "test": "test"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "BSD-2-Clause"
 }
