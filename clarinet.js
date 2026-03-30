@@ -320,9 +320,9 @@
     this.emit("close");
   };
 
-  function emit(parser, event, data) {
-    if(clarinet.INFO) console.log('-- emit', event, data);
-    if (parser[event]) parser[event](data);
+  function emit(parser, event, data, extra) {
+    if(clarinet.INFO) console.log('-- emit', event, data, extra);
+    if (parser[event]) parser[event](data, extra);
   }
 
   function emitNode(parser, event, data) {
@@ -340,7 +340,7 @@
 
   function closeNumber(parser) {
     if (parser.numberNode)
-      emit(parser, "onvalue", parseFloat(parser.numberNode));
+      emit(parser, "onvalue", parseFloat(parser.numberNode), parser.numberNode.includes("."));
     parser.numberNode = "";
   }
 
@@ -654,8 +654,9 @@
         continue;
 
         case S.NUMBER_DIGIT:
-          if(Char._0 <= c && c <= Char._9) parser.numberNode += String.fromCharCode(c);
-          else if (c === Char.period) {
+          if(Char._0 <= c && c <= Char._9) {
+            parser.numberNode += String.fromCharCode(c);
+          } else if (c === Char.period) {
             if(parser.numberNode.indexOf('.')!==-1)
               error(parser, 'Invalid number has two dots');
             parser.numberNode += ".";
